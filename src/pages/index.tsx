@@ -1,13 +1,17 @@
+import Header from '@/components/Header';
 import { NextPage } from 'next';
 import Head from 'next/head';
 
 const Home: NextPage = () => {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2">
+    <div className="relative h-screen bg-gradient-to-t from-[#010511] to-gray-900/10  lg:h-[140vh]">
       <Head>
-        <title>Create Next App</title>
+        <title>Главная - Что бы посмотреть</title>
       </Head>
-      Lets build our app
+      <Header />
+      <main>
+        <section></section>
+      </main>
     </div>
   );
 };
