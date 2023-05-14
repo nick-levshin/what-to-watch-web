@@ -1,7 +1,7 @@
 const BASE_URL = 'https://api.kinopoisk.dev/v1.3/';
 
 const requests = {
-  fetchAwaitMovies: `${BASE_URL}movie?sortField=rating.await&page=1&limit=10`,
+  fetchPopularMovies: `${BASE_URL}movie?sortField=rating.kp&page=1&limit=10&year=2023`,
   fetchTopRatedMovies: `${BASE_URL}movie?sortField=rating.kp&page=1&limit=10`,
   fetchTopRatedSeries: `${BASE_URL}movie?sortField=rating.kp&page=1&limit=10&isSeries=true`,
   fetchActionMovies: `${BASE_URL}movie?sortField=rating.kp&page=1&limit=10&genres.name=боевик`,

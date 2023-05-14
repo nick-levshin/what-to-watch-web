@@ -42,7 +42,7 @@ const Header = () => {
         <li className="headerLink">Главная</li>
         <li className="headerLink">Сериалы</li>
         <li className="headerLink">Фильмы</li>
-        <li className="headerLink">Ожидаемое</li>
+        <li className="headerLink">Популярное</li>
         <li className="headerLink">Избранное</li>
       </ul>
       <div className="flex items-center space-x-4 text-sm font-light">

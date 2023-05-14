@@ -9,7 +9,7 @@ import Row from '@/components/Row';
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
 interface Props {
-  awaitMovies: DocsMovies;
+  popularMovies: DocsMovies;
   topRatedMovies: Movie[];
   topRatedSeries: Movie[];
   actionMovies: Movie[];
@@ -21,7 +21,7 @@ interface Props {
 }
 
 const Home = ({
-  awaitMovies,
+  popularMovies,
   topRatedMovies,
   topRatedSeries,
   actionMovies,
@@ -31,6 +31,8 @@ const Home = ({
   documentaries,
   randomMovie,
 }: Props) => {
+  console.log(popularMovies);
+
   return (
     <div className="relative h-screen bg-gradient-to-t from-[#010511] to-gray-900/10  lg:h-[140vh]">
       <Head>
@@ -40,7 +42,7 @@ const Home = ({
       <main className="relative pl-4 pb-24 lg:space-y-24 lg:pl-16">
         <Banner randomMovie={randomMovie} />
         <section>
-          <Row title="Ожидаемое" movies={awaitMovies} />
+          <Row title="Популярное" movies={popularMovies} />
           {/* <Row title="Лучшие Фильмы" movies={topRatedMovies} />
           <Row title="Лучшие Сериалы" movies={topRatedSeries} />
           <Row title="Боевики" movies={actionMovies} />
@@ -58,9 +60,9 @@ export default Home;
 
 export const getServerSideProps = async () => {
   const [
-    awaitMovies,
     topRatedMovies,
     topRatedSeries,
+    popularMovies,
     actionMovies,
     comedyMovies,
     horrorMovies,
@@ -80,7 +82,7 @@ export const getServerSideProps = async () => {
         'X-API-Key': API_KEY,
       },
     }),
-    axios.get(requests.fetchAwaitMovies, {
+    axios.get(requests.fetchPopularMovies, {
       headers: {
         'Content-type': 'application/json',
         'X-API-Key': API_KEY,
@@ -126,7 +128,7 @@ export const getServerSideProps = async () => {
 
   return {
     props: {
-      awaitMovies: awaitMovies.data,
+      popularMovies: popularMovies.data,
       topRatedMovies: topRatedMovies.data,
       topRatedSeries: topRatedSeries.data,
       actionMovies: actionMovies.data,
