@@ -3,12 +3,13 @@ import Header from '@/components/Header';
 import Head from 'next/head';
 import requests from '@/utils/requests';
 import axios from 'axios';
-import { Movie } from '../../typings';
+import { DocsMovies, Movie } from '../../typings';
+import Row from '@/components/Row';
 
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
 interface Props {
-  awaitMovies: Movie[];
+  awaitMovies: DocsMovies;
   topRatedMovies: Movie[];
   topRatedSeries: Movie[];
   actionMovies: Movie[];
@@ -38,7 +39,16 @@ const Home = ({
       <Header />
       <main className="relative pl-4 pb-24 lg:space-y-24 lg:pl-16">
         <Banner randomMovie={randomMovie} />
-        <section></section>
+        <section>
+          <Row title="Ожидаемое" movies={awaitMovies} />
+          {/* <Row title="Лучшие Фильмы" movies={topRatedMovies} />
+          <Row title="Лучшие Сериалы" movies={topRatedSeries} />
+          <Row title="Боевики" movies={actionMovies} />
+          <Row title="Комедии" movies={comedyMovies} />
+          <Row title="Фильмы ужасов" movies={horrorMovies} />
+          <Row title="Драмы" movies={dramaMovies} />
+          <Row title="Документальные фильмы" movies={documentaries} /> */}
+        </section>
       </main>
     </div>
   );

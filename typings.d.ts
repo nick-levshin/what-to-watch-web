@@ -1,4 +1,5 @@
 export interface Movie {
+  id: number;
   name: string;
   type: string;
   year: number;
@@ -30,4 +31,8 @@ export interface Movie {
       name: string;
     }
   ];
+}
+
+export interface DocsMovies {
+  docs: [Movie];
 }
