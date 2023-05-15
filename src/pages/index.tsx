@@ -10,13 +10,13 @@ const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
 interface Props {
   popularMovies: DocsMovies;
-  topRatedMovies: Movie[];
-  topRatedSeries: Movie[];
-  actionMovies: Movie[];
-  comedyMovies: Movie[];
-  horrorMovies: Movie[];
-  dramaMovies: Movie[];
-  documentaries: Movie[];
+  topRatedMovies: DocsMovies;
+  topRatedSeries: DocsMovies;
+  actionMovies: DocsMovies;
+  comedyMovies: DocsMovies;
+  horrorMovies: DocsMovies;
+  dramaMovies: DocsMovies;
+  documentaries: DocsMovies;
   randomMovie: Movie;
 }
 
@@ -31,8 +31,6 @@ const Home = ({
   documentaries,
   randomMovie,
 }: Props) => {
-  console.log(popularMovies);
-
   return (
     <div className="relative h-screen bg-gradient-to-t from-[#010511] to-gray-900/10  lg:h-[140vh]">
       <Head>
@@ -41,15 +39,15 @@ const Home = ({
       <Header />
       <main className="relative pl-4 pb-24 lg:space-y-24 lg:pl-16">
         <Banner randomMovie={randomMovie} />
-        <section>
+        <section className="md:space-y-24 mt-10 md:mt-20">
           <Row title="Популярное" movies={popularMovies} />
-          {/* <Row title="Лучшие Фильмы" movies={topRatedMovies} />
+          <Row title="Лучшие Фильмы" movies={topRatedMovies} />
           <Row title="Лучшие Сериалы" movies={topRatedSeries} />
           <Row title="Боевики" movies={actionMovies} />
           <Row title="Комедии" movies={comedyMovies} />
           <Row title="Фильмы ужасов" movies={horrorMovies} />
           <Row title="Драмы" movies={dramaMovies} />
-          <Row title="Документальные фильмы" movies={documentaries} /> */}
+          <Row title="Документальные фильмы" movies={documentaries} />
         </section>
       </main>
     </div>

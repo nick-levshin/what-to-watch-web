@@ -8,7 +8,7 @@ interface Props {
 
 const Banner = ({ randomMovie }: Props) => {
   return (
-    <div className="flex flex-col space-y-2 py-16 md:space-y-4 lg:h-[65vh] lg:justify-end lg:pb-12">
+    <div className="flex flex-col space-y-2 py-24 md:space-y-4 lg:h-[65vh] lg:justify-end lg:pb-12">
       <div className="absolute top-0 left-0 h-screen w-full -z-10">
         <Image
           src={randomMovie?.poster?.url}
