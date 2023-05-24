@@ -3,8 +3,13 @@ import Header from '@/components/Header';
 import Head from 'next/head';
 import requests from '@/utils/requests';
 import axios from 'axios';
-import { DocsMovies, Movie } from '../../typings';
+import { DocsMovies, Movie, User } from '../../typings';
 import Row from '@/components/Row';
+import { supabase } from '@/utils/supabaseClient';
+import { useRouter } from 'next/router';
+import { useRecoilState } from 'recoil';
+import { appState } from '@/atoms/detailsAtom';
+import Loader from '@/components/Loader';
 
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
@@ -18,6 +23,7 @@ interface Props {
   dramaMovies: DocsMovies;
   documentaries: DocsMovies;
   randomMovie: Movie;
+  users: User[];
 }
 
 const Home = ({
@@ -30,14 +36,28 @@ const Home = ({
   dramaMovies,
   documentaries,
   randomMovie,
+  users,
 }: Props) => {
+  const router = useRouter();
+  const [appSetting, setAppSettings] = useRecoilState(appState);
+
+  if (typeof window !== 'undefined') {
+    if (!localStorage.getItem('user')) {
+      router.push('/login');
+    }
+  }
+
+  if (appSetting.loading) {
+    return <Loader />;
+  }
+
   return (
     <div className="relative h-screen bg-gradient-to-t from-[#010511] to-gray-900/10  lg:h-[140vh]">
       <Head>
-        <title>Главная - Что бы посмотреть</title>
+        <title>Главная - Что бы посмотреть?</title>
       </Head>
       <Header />
-      <main className="relative pl-4 pb-24 lg:space-y-24 lg:pl-16">
+      <main className="relative pl-4 lg:space-y-24 lg:pl-16">
         <Banner randomMovie={randomMovie} />
         <section className="md:space-y-24 mt-10 md:mt-20">
           <Row title="Популярное" movies={popularMovies} />
@@ -57,6 +77,8 @@ const Home = ({
 export default Home;
 
 export const getServerSideProps = async () => {
+  const { data } = await supabase.from('users').select();
+
   const [
     topRatedMovies,
     topRatedSeries,
@@ -135,6 +157,7 @@ export const getServerSideProps = async () => {
       dramaMovies: dramaMovies.data,
       documentaries: documentaries.data,
       randomMovie: randomMovie.data,
+      users: data,
     },
   };
 };

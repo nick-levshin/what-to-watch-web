@@ -1,3 +1,7 @@
+export interface App {
+  loading: boolean;
+}
+
 export interface Movie {
   id: number;
   name: string;
@@ -10,7 +14,7 @@ export interface Movie {
     kp: number;
     imdb: number;
   };
-  movieLingth: number;
+  movieLength: number;
   poster: {
     url: string;
   };
@@ -31,8 +35,24 @@ export interface Movie {
       name: string;
     }
   ];
+  persons: [
+    {
+      id: number;
+      photo: string;
+      name: string;
+      profession: string;
+      enProfession: string;
+    }
+  ];
 }
 
 export interface DocsMovies {
   docs: [Movie];
+}
+
+export interface User {
+  id: number;
+  username: string;
+  email: string;
+  password: string;
 }
