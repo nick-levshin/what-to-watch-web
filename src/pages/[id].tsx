@@ -1,30 +1,43 @@
-import { appState, modalState, movieState } from '@/atoms/detailsAtom';
+import React from 'react';
+import {
+  appState,
+  modalState,
+  personIdState,
+  personModalState,
+} from '@/atoms/detailsAtom';
 import Header from '@/components/Header';
 import Loader from '@/components/Loader';
 import Head from 'next/head';
 import Image from 'next/image';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import noposter from '@/assets/noposter.jpg';
 import axios from 'axios';
 import { DocsMovies } from '../../typings';
-import { useRouter } from 'next/router';
 import { BookmarkIcon } from '@heroicons/react/24/outline';
 import ActorsRow from '@/components/ActorsRow';
-import Modal from '@/components/Modal';
+import TrailerModal from '@/components/TrailerModal';
+import ActorModal from '@/components/ActorModal';
 
 interface Props {
   currentMovie: DocsMovies;
 }
 
 const Details = ({ currentMovie }: Props) => {
-  const [appSetting, setAppSettings] = useRecoilState(appState);
-  const showModal = useRecoilState(modalState);
+  const [showModal, setShowModal] = useRecoilState(modalState);
+  const [showPersonModal, setShowPersonModal] =
+    useRecoilState(personModalState);
+  const appSetting = useRecoilValue(appState);
+  const [currentPersonId, setCurrentPersonId] = useRecoilState(personIdState);
   const movie = currentMovie.docs[0];
-  const rowActorsArray = movie.persons
-    .filter((person) => person.enProfession === 'director')
+  const isTrailer =
+    movie?.videos &&
+    !!movie?.videos.trailers.filter((trailer) => trailer.site === 'youtube')
+      .length;
+  const rowActorsArray = movie?.persons
+    ?.filter((person) => person.enProfession === 'director')
     .slice(0, 5)
     .concat(
-      movie.persons
+      movie?.persons
         .filter((person) => person.enProfession === 'actor')
         .slice(0, 5)
     );
@@ -73,36 +86,30 @@ const Details = ({ currentMovie }: Props) => {
               <div className="w-full text-gray-400 mt-4 lg:text-lg">
                 <p className="mb-2">
                   Режиссеры:{' '}
-                  {movie.persons
-                    .filter((person) => person.enProfession === 'director')
+                  {movie?.persons
+                    ?.filter((person) => person.enProfession === 'director')
                     .slice(0, 5)
                     .map((person, index, array) => (
-                      <>
-                        <button
-                          className="text-white underline hover:text-gray-300 transition"
-                          key={person.id}
-                        >
+                      <React.Fragment key={person.id}>
+                        <button className="text-white underline hover:text-gray-300 transition">
                           {person.name}
                         </button>
                         {index !== array.length - 1 && ', '}
-                      </>
+                      </React.Fragment>
                     ))}
                 </p>
                 <p>
                   Актеры:{' '}
-                  {movie.persons
-                    .filter((person) => person.enProfession === 'actor')
+                  {movie?.persons
+                    ?.filter((person) => person.enProfession === 'actor')
                     .slice(0, 5)
                     .map((person, index, array) => (
-                      <>
-                        <button
-                          className="text-white underline hover:text-gray-300 transition"
-                          key={person.id}
-                        >
+                      <React.Fragment key={person.id}>
+                        <button className="text-white underline hover:text-gray-300 transition">
                           {person.name}
                         </button>
                         {index !== array.length - 1 && ', '}
-                      </>
+                      </React.Fragment>
                     ))}
                 </p>
               </div>
@@ -110,9 +117,14 @@ const Details = ({ currentMovie }: Props) => {
                 <button className="bg-[#dc2626] p-3 rounded hover:bg-[#ee3f3f] transition">
                   Смотреть фильм
                 </button>
-                <button className="bg-[hsla(216,4%,55%,.3)] p-3 rounded hover:bg-[#5a5959] transition">
-                  Трейлер
-                </button>
+                {isTrailer && (
+                  <button
+                    className="bg-[hsla(216,4%,55%,.3)] p-3 rounded hover:bg-[#5a5959] transition"
+                    onClick={() => setShowModal(true)}
+                  >
+                    Трейлер
+                  </button>
+                )}
                 <button className="bg-[hsla(216,4%,55%,.3)] p-3 rounded hover:bg-[#5a5959] transition">
                   <BookmarkIcon className="w-6 h-6" />
                 </button>
@@ -127,7 +139,16 @@ const Details = ({ currentMovie }: Props) => {
           <ActorsRow persons={rowActorsArray} />
         </div>
       </main>
-      {showModal && <Modal />}
+      {showModal && (
+        <TrailerModal
+          url={
+            movie.videos.trailers.filter(
+              (trailer) => trailer.site === 'youtube'
+            )[0].url
+          }
+        />
+      )}
+      {showPersonModal && <ActorModal id={currentPersonId} />}
     </div>
   );
 };
@@ -139,7 +160,7 @@ export const getServerSideProps = async (context: {
 }) => {
   const [movie] = await Promise.all([
     axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL}movie?selectFields=id%20name%20poster%20year%20description%20rating%20movieLength%20genres%20countries%20persons&page=1&id=${context.params.id}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}movie?selectFields=id%20name%20poster%20year%20description%20rating%20movieLength%20genres%20countries%20persons%20videos.trailers&page=1&id=${context.params.id}`,
       {
         headers: {
           'Content-type': 'application/json',

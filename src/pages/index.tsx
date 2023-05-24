@@ -36,7 +36,6 @@ const Home = ({
   dramaMovies,
   documentaries,
   randomMovie,
-  users,
 }: Props) => {
   const router = useRouter();
   const [appSetting, setAppSettings] = useRecoilState(appState);
@@ -77,8 +76,6 @@ const Home = ({
 export default Home;
 
 export const getServerSideProps = async () => {
-  const { data } = await supabase.from('users').select();
-
   const [
     topRatedMovies,
     topRatedSeries,
@@ -157,7 +154,6 @@ export const getServerSideProps = async () => {
       dramaMovies: dramaMovies.data,
       documentaries: documentaries.data,
       randomMovie: randomMovie.data,
-      users: data,
     },
   };
 };

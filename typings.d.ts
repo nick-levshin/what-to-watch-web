@@ -35,7 +35,7 @@ export interface Movie {
       name: string;
     }
   ];
-  persons: [
+  persons?: [
     {
       id: number;
       photo: string;
@@ -44,6 +44,26 @@ export interface Movie {
       enProfession: string;
     }
   ];
+  videos?: {
+    trailers: [
+      {
+        url: string;
+        site: string;
+      }
+    ];
+  };
+}
+
+export interface Person {
+  id: number;
+  name: number;
+  photo: string;
+  birthday: Date;
+  deathPlace?: Date;
+  profession: [{ value: string }];
+  birthplace: [{ value: string }];
+  movies: [{ id: number; name: string }];
+  facts: [{ value: string }];
 }
 
 export interface DocsMovies {

@@ -3,7 +3,7 @@ import { useRef, useState } from 'react';
 import ActorsThumbnail from './ActorsThumbnail';
 
 interface Props {
-  persons: {
+  persons?: {
     id: number;
     name: string;
     photo: string;
@@ -43,7 +43,7 @@ const ActorsRow = ({ persons }: Props) => {
           ref={rowRef}
           className="flex scrollbar-hide items-start space-x-4 overflow-x-scroll md:p-2"
         >
-          {persons.map((person) => (
+          {persons?.map((person) => (
             <ActorsThumbnail key={person.id} person={person} />
           ))}
         </div>

@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import noposter from '@/assets/noposter.jpg';
 import { useRecoilState } from 'recoil';
-import { appState } from '@/atoms/detailsAtom';
+import { personIdState, personModalState } from '@/atoms/detailsAtom';
 import { capitalizeFirstLetter } from '@/utils/helpers';
 
 interface Props {
@@ -14,21 +14,27 @@ interface Props {
 }
 
 const ActorsThumbnail = ({ person }: Props) => {
-  const handleMovieClick = (id: number) => {
-    // setAppSettings({ loading: true });
-    // router.push(`/${id}`).then(() => setAppSettings({ loading: false }));
+  const [showPersonModal, setShowPersonModal] =
+    useRecoilState(personModalState);
+  const [currentPersonId, setCurrentPersonId] = useRecoilState(personIdState);
+
+  const handleClick = () => {
+    setCurrentPersonId(person.id);
+    setShowPersonModal(true);
   };
 
   return (
     <div className="md:hover:-translate-y-2 transition">
-      <div className="relative min-h-[100px] min-w-[100px] cursor-pointer transition duration-200 ease-out md:h-[150px] md:w-[150px] lg:h-[200px] lg:w-[200px] mx-auto">
+      <div
+        className="relative min-h-[100px] w-[100px] cursor-pointer transition duration-200 ease-out md:h-[150px] md:w-[150px] lg:h-[200px] lg:w-[200px] mx-auto"
+        onClick={() => handleClick()}
+      >
         <Image
           src={person.photo || noposter}
           alt={person.name || `${person.id}`}
           fill
           sizes="(min-width: 768px) 150px, 100px"
           className="rounded-full object-cover cursor-pointer"
-          onClick={() => handleMovieClick(person?.id)}
         />
       </div>
       <div className="min-h-[50px] mt-2 text-center">

@@ -15,3 +15,13 @@ export const modalState = atom({
   key: 'modalState',
   default: false,
 });
+
+export const personModalState = atom({
+  key: 'personModalState',
+  default: false,
+});
+
+export const personIdState = atom<number | null>({
+  key: 'personIdState',
+  default: null,
+});
