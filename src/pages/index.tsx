@@ -5,7 +5,6 @@ import requests from '@/utils/requests';
 import axios from 'axios';
 import { DocsMovies, Movie, User } from '../../typings';
 import Row from '@/components/Row';
-import { supabase } from '@/utils/supabaseClient';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { appState } from '@/atoms/detailsAtom';

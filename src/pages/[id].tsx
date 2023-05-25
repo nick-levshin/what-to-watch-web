@@ -42,6 +42,11 @@ const Details = ({ currentMovie }: Props) => {
         .slice(0, 5)
     );
 
+  const handleClick = (id: number) => {
+    setCurrentPersonId(id);
+    setShowPersonModal(true);
+  };
+
   if (appSetting.loading) {
     return <Loader />;
   }
@@ -65,7 +70,7 @@ const Details = ({ currentMovie }: Props) => {
             </div>
             <div className="max-w-[600px]">
               <div className="w-full lg:text-lg">
-                <h1 className="text-3xl font-semibold lg:text-4xl">
+                <h1 className="text-3xl font-semibold md:text-4xl lg:text-5xl">
                   {movie?.name}
                 </h1>
                 <p className="my-4">{movie?.description}</p>
@@ -91,7 +96,10 @@ const Details = ({ currentMovie }: Props) => {
                     .slice(0, 5)
                     .map((person, index, array) => (
                       <React.Fragment key={person.id}>
-                        <button className="text-white underline hover:text-gray-300 transition">
+                        <button
+                          className="text-white underline hover:text-gray-300 transition"
+                          onClick={() => handleClick(person.id)}
+                        >
                           {person.name}
                         </button>
                         {index !== array.length - 1 && ', '}
@@ -105,7 +113,10 @@ const Details = ({ currentMovie }: Props) => {
                     .slice(0, 5)
                     .map((person, index, array) => (
                       <React.Fragment key={person.id}>
-                        <button className="text-white underline hover:text-gray-300 transition">
+                        <button
+                          className="text-white underline hover:text-gray-300 transition"
+                          onClick={() => handleClick(person.id)}
+                        >
                           {person.name}
                         </button>
                         {index !== array.length - 1 && ', '}

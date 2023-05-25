@@ -56,13 +56,13 @@ export interface Movie {
 
 export interface Person {
   id: number;
-  name: number;
+  name: string;
   photo: string;
-  birthday: Date;
-  deathPlace?: Date;
+  birthday: string;
+  death?: string;
   profession: [{ value: string }];
-  birthplace: [{ value: string }];
-  movies: [{ id: number; name: string }];
+  birthPlace?: [{ value: string }];
+  movies: [{ id: number; name: string; rating: number }];
   facts: [{ value: string }];
 }
 
