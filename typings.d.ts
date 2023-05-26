@@ -71,8 +71,9 @@ export interface DocsMovies {
 }
 
 export interface User {
-  id: number;
-  username: string;
-  email: string;
-  password: string;
+  id?: number;
+  username?: string;
+  email?: string;
+  password?: string;
+  created_at?: string;
 }

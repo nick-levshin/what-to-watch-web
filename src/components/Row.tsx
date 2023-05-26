@@ -4,11 +4,12 @@ import Thumbnail from './Thumbnail';
 import { useRef, useState } from 'react';
 
 interface Props {
+  id?: string;
   title: string;
   movies: DocsMovies;
 }
 
-const Row = ({ title, movies }: Props) => {
+const Row = ({ title, movies, id }: Props) => {
   const rowRef = useRef<HTMLDivElement>(null);
   const [isMoved, setIsMoved] = useState(false);
 
@@ -29,7 +30,10 @@ const Row = ({ title, movies }: Props) => {
 
   return (
     <div className="h-[280px] space-y-0.5 md:space-y-2">
-      <h2 className="w-[320px] cursor-pointer text-sm font-semibold text-[#e5e5e5] transition duration-200 hover:text-white md:text-2xl">
+      <h2
+        className="w-[320px] cursor-pointer text-sm font-semibold text-[#e5e5e5] transition duration-200 hover:text-white md:text-2xl"
+        id={id}
+      >
         {title}
       </h2>
       <div className="group relative md:-ml-2">

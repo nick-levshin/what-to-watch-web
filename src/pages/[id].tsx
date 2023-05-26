@@ -34,11 +34,11 @@ const Details = ({ currentMovie }: Props) => {
     !!movie?.videos.trailers.filter((trailer) => trailer.site === 'youtube')
       .length;
   const rowActorsArray = movie?.persons
-    ?.filter((person) => person.enProfession === 'director')
+    ?.filter((person) => person.enProfession === 'director' && person.name)
     .slice(0, 5)
     .concat(
       movie?.persons
-        .filter((person) => person.enProfession === 'actor')
+        .filter((person) => person.enProfession === 'actor' && person.name)
         .slice(0, 5)
     );
 
@@ -68,7 +68,7 @@ const Details = ({ currentMovie }: Props) => {
                 sizes="(min-width: 768px) 300px, 400px"
               />
             </div>
-            <div className="max-w-[600px]">
+            <div className="max-w-[600px] !mt-0">
               <div className="w-full lg:text-lg">
                 <h1 className="text-3xl font-semibold md:text-4xl lg:text-5xl">
                   {movie?.name}
@@ -92,7 +92,10 @@ const Details = ({ currentMovie }: Props) => {
                 <p className="mb-2">
                   Режиссеры:{' '}
                   {movie?.persons
-                    ?.filter((person) => person.enProfession === 'director')
+                    ?.filter(
+                      (person) =>
+                        person.enProfession === 'director' && person.name
+                    )
                     .slice(0, 5)
                     .map((person, index, array) => (
                       <React.Fragment key={person.id}>
@@ -109,7 +112,9 @@ const Details = ({ currentMovie }: Props) => {
                 <p>
                   Актеры:{' '}
                   {movie?.persons
-                    ?.filter((person) => person.enProfession === 'actor')
+                    ?.filter(
+                      (person) => person.enProfession === 'actor' && person.name
+                    )
                     .slice(0, 5)
                     .map((person, index, array) => (
                       <React.Fragment key={person.id}>

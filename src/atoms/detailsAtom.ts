@@ -1,9 +1,14 @@
 import { atom } from 'recoil';
-import { App, Movie } from '../../typings';
+import { App, Movie, User } from '../../typings';
 
 export const appState = atom<App>({
   key: 'appState',
   default: { loading: false },
+});
+
+export const userState = atom<User | null>({
+  key: 'userState',
+  default: null,
 });
 
 export const movieState = atom<Movie | null>({

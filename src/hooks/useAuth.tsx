@@ -1,8 +1,10 @@
-import { useState, useEffect, useMemo, useContext, createContext } from 'react';
+import { useState, useMemo, useContext, createContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '@/utils/supabaseClient';
 import { User } from '../../typings';
 import bcrypt from 'bcryptjs-react';
+import { useRecoilState } from 'recoil';
+import { userState } from '@/atoms/detailsAtom';
 
 interface IAuth {
   user: User | null;
@@ -26,8 +28,32 @@ const AuthContext = createContext<IAuth>({
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useRecoilState(userState);
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const email = localStorage.getItem('user');
+      if (email) {
+        try {
+          const { data } = await supabase
+            .from('users')
+            .select('id, username, email, password, created_at')
+            .eq('email', email)
+            .single();
+          if (data) {
+            setUser(data);
+          } else {
+            throw new Error('Incorrect email or password');
+          }
+        } catch (e) {
+          console.log('Fetch user error:', e);
+        }
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const signUp = async (nickname: string, email: string, password: string) => {
     setLoading(true);

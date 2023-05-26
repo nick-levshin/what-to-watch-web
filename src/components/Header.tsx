@@ -5,18 +5,17 @@ import { useEffect, useState } from 'react';
 
 import logo from '@/assets/logo.svg';
 import profile from '@/assets/profile.png';
-import useAuth from '@/hooks/useAuth';
-import { NextRouter, useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { appState } from '@/atoms/detailsAtom';
+import BasicMenu from './BasicMenu';
 
 const Header = () => {
   const [appSettings, setAppSettings] = useRecoilState(appState);
   const [isScrolled, setIsScrolled] = useState(false);
-  const { logout } = useAuth();
   const router = useRouter();
 
-  const handleLogo = (router: NextRouter) => {
+  const handleLogo = () => {
     setAppSettings({ loading: true });
     router.push('/').then(() => setAppSettings({ loading: false }));
   };
@@ -48,26 +47,41 @@ const Header = () => {
           alt="logo"
           className="object-contain cursor-pointer"
           priority
-          onClick={() => handleLogo(router)}
+          onClick={() => handleLogo()}
         />
+        <BasicMenu />
       </div>
       <ul className="hidden space-x-4 md:flex">
-        <li className="headerLink">Главная</li>
-        <li className="headerLink">Сериалы</li>
-        <li className="headerLink">Фильмы</li>
-        <li className="headerLink">Популярное</li>
+        <li className="headerLink" onClick={() => handleLogo()}>
+          Главная
+        </li>
+        <li className="headerLink">
+          <Link href="/#series" scroll={false}>
+            Сериалы
+          </Link>
+        </li>
+        <li className="headerLink">
+          <Link href="/#movies" scroll={false}>
+            Фильмы
+          </Link>
+        </li>
+        <li className="headerLink">
+          <Link href="/#popular" scroll={false}>
+            Популярное
+          </Link>
+        </li>
         <li className="headerLink">Избранное</li>
       </ul>
       <div className="flex items-center space-x-4 text-sm font-light">
-        <MagnifyingGlassIcon className="hidden sm:inline h-6 w-6" />
-        {/* <p className="hidden lg:inline">Дети</p> */}
+        <MagnifyingGlassIcon className="h-6 w-6" />
         <BellIcon className="h-6 w-6" />
-        <Image
-          src={profile}
-          alt="profile"
-          className="cursor-pointer rounded"
-          onClick={() => logout()}
-        />
+        <Link href="/account">
+          <Image
+            src={profile}
+            alt="profile"
+            className="cursor-pointer rounded"
+          />
+        </Link>
       </div>
     </header>
   );

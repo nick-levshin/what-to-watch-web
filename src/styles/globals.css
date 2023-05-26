@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
+
 @layer base {
   body {
     @apply bg-[#141414] text-white !scrollbar-thin !scrollbar-track-transparent !scrollbar-thumb-red-600;
@@ -131,13 +135,7 @@
 }
 
 .actors-name {
-  word-spacing: 100px;
-}
-
-@media (min-width: 768px) {
-  .actors-name {
-    word-spacing: 150px;
-  }
+  word-spacing: 10000px;
 }
 
 /* Films List */

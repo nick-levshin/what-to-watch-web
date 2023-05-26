@@ -7,7 +7,7 @@ import { DocsMovies, Movie, User } from '../../typings';
 import Row from '@/components/Row';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
-import { appState } from '@/atoms/detailsAtom';
+import { appState, userState } from '@/atoms/detailsAtom';
 import Loader from '@/components/Loader';
 
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
@@ -58,9 +58,9 @@ const Home = ({
       <main className="relative pl-4 lg:space-y-24 lg:pl-16">
         <Banner randomMovie={randomMovie} />
         <section className="md:space-y-24 mt-10 md:mt-20">
-          <Row title="Популярное" movies={popularMovies} />
-          <Row title="Лучшие Фильмы" movies={topRatedMovies} />
-          <Row title="Лучшие Сериалы" movies={topRatedSeries} />
+          <Row title="Популярное" movies={popularMovies} id="popular" />
+          <Row title="Лучшие Фильмы" movies={topRatedMovies} id="movies" />
+          <Row title="Лучшие Сериалы" movies={topRatedSeries} id="series" />
           <Row title="Боевики" movies={actionMovies} />
           <Row title="Комедии" movies={comedyMovies} />
           <Row title="Фильмы ужасов" movies={horrorMovies} />
