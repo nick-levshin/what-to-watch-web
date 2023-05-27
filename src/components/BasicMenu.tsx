@@ -66,7 +66,11 @@ const BasicMenu = () => {
             Популярное
           </Link>
         </MenuItem>
-        <MenuItem onClick={handleClose}>Избранное</MenuItem>
+        <MenuItem onClick={handleClose}>
+          <Link href="/#liked" scroll={false}>
+            Избранное
+          </Link>
+        </MenuItem>
       </Menu>
     </div>
   );

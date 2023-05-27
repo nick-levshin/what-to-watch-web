@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { App, Movie, User } from '../../typings';
+import { App, DocsMovies, Movie, User } from '../../typings';
 
 export const appState = atom<App>({
   key: 'appState',
@@ -28,5 +28,10 @@ export const personModalState = atom({
 
 export const personIdState = atom<number | null>({
   key: 'personIdState',
+  default: null,
+});
+
+export const likedMoviesState = atom<DocsMovies | null>({
+  key: 'likedMoviesState',
   default: null,
 });

@@ -6,9 +6,10 @@ import axios from 'axios';
 import { DocsMovies, Movie, User } from '../../typings';
 import Row from '@/components/Row';
 import { useRouter } from 'next/router';
-import { useRecoilState } from 'recoil';
-import { appState, userState } from '@/atoms/detailsAtom';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { appState, likedMoviesState, userState } from '@/atoms/detailsAtom';
 import Loader from '@/components/Loader';
+import { useEffect } from 'react';
 
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
@@ -37,7 +38,36 @@ const Home = ({
   randomMovie,
 }: Props) => {
   const router = useRouter();
-  const [appSetting, setAppSettings] = useRecoilState(appState);
+  const appSetting = useRecoilValue(appState);
+  const user = useRecoilValue(userState);
+  const [likedMovies, setLikedMovies] = useRecoilState(likedMoviesState);
+
+  useEffect(() => {
+    const fetchLikedMovies = async () => {
+      try {
+        if (user?.liked_movies?.length) {
+          const { data: liked } = await axios.get(
+            `${
+              process.env.NEXT_PUBLIC_BASE_URL
+            }movie?selectFields=id%20poster&page=1&limit=10${user?.liked_movies
+              ?.map((id: number) => `&id=${id}`)
+              .join('')}`,
+            {
+              headers: {
+                'Content-type': 'application/json',
+                'X-API-Key': process.env.NEXT_PUBLIC_API_KEY,
+              },
+            }
+          );
+          setLikedMovies(liked);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    fetchLikedMovies();
+  }, [user?.liked_movies]);
 
   if (typeof window !== 'undefined') {
     if (!localStorage.getItem('user')) {
@@ -66,6 +96,9 @@ const Home = ({
           <Row title="Фильмы ужасов" movies={horrorMovies} />
           <Row title="Драмы" movies={dramaMovies} />
           <Row title="Документальные фильмы" movies={documentaries} />
+          {likedMovies && (
+            <Row title="Избранное" movies={likedMovies} id="liked" />
+          )}
         </section>
       </main>
     </div>

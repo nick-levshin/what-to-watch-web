@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         try {
           const { data } = await supabase
             .from('users')
-            .select('id, username, email, password, created_at')
+            .select('id, username, email, password, created_at, liked_movies')
             .eq('email', email)
             .single();
           if (data) {
@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const { data } = await supabase
         .from('users')
         .insert({ username: nickname, email, password: hashedPassword })
-        .select('id, username, email, password')
+        .select('id, username, email, password, created_at, liked_movies')
         .single();
       if (data) {
         setUser(data);
@@ -80,7 +80,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setLoading(true);
       const { data } = await supabase
         .from('users')
-        .select('id, username, email, password')
+        .select('id, username, email, password, created_at, liked_movies')
         .eq('email', email)
         .single();
       if (data && bcrypt.compareSync(password, data.password)) {
@@ -99,6 +99,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const logout = () => {
     localStorage.removeItem('user');
+    setUser(null);
+
     router.push('/login');
   };
 

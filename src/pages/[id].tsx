@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   appState,
   modalState,
   personIdState,
   personModalState,
+  userState,
 } from '@/atoms/detailsAtom';
 import Header from '@/components/Header';
 import Loader from '@/components/Loader';
@@ -13,22 +14,29 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import noposter from '@/assets/noposter.jpg';
 import axios from 'axios';
 import { DocsMovies } from '../../typings';
-import { BookmarkIcon } from '@heroicons/react/24/outline';
+import { BookmarkIcon, CheckBadgeIcon } from '@heroicons/react/24/outline';
 import ActorsRow from '@/components/ActorsRow';
 import TrailerModal from '@/components/TrailerModal';
 import ActorModal from '@/components/ActorModal';
+import { supabase } from '@/utils/supabaseClient';
+import { Toaster, toast } from 'react-hot-toast';
 
 interface Props {
   currentMovie: DocsMovies;
 }
 
 const Details = ({ currentMovie }: Props) => {
+  const [user, setUser] = useRecoilState(userState);
   const [showModal, setShowModal] = useRecoilState(modalState);
   const [showPersonModal, setShowPersonModal] =
     useRecoilState(personModalState);
   const appSetting = useRecoilValue(appState);
   const [currentPersonId, setCurrentPersonId] = useRecoilState(personIdState);
   const movie = currentMovie.docs[0];
+  const [isLiked, setIsLiked] = useState(
+    user?.liked_movies?.includes(movie.id)
+  );
+
   const isTrailer =
     movie?.videos &&
     !!movie?.videos.trailers.filter((trailer) => trailer.site === 'youtube')
@@ -47,6 +55,44 @@ const Details = ({ currentMovie }: Props) => {
     setShowPersonModal(true);
   };
 
+  const handleLike = async () => {
+    try {
+      let newLikedMovies: number[];
+      if (isLiked) {
+        newLikedMovies = (user?.liked_movies as []).filter(
+          (movieId) => movieId !== movie.id
+        );
+      } else {
+        newLikedMovies = user?.liked_movies
+          ? [...(user?.liked_movies as []), movie.id]
+          : [movie.id];
+      }
+      const { error } = await supabase
+        .from('users')
+        .update({ liked_movies: newLikedMovies })
+        .eq('id', user?.id);
+      if (!error) {
+        setUser((prev) => {
+          return { ...prev, liked_movies: newLikedMovies };
+        });
+        setIsLiked((prev) => !prev);
+        if (isLiked) {
+          toast.success(`"${movie.name}" был удален из избранного`, {
+            duration: 8000,
+          });
+        } else {
+          toast.success(`"${movie.name}" был добавлен в избранное`, {
+            duration: 8000,
+          });
+        }
+      } else {
+        throw new Error('Handle like error');
+      }
+    } catch (e) {
+      console.log('Handle like error:', e);
+    }
+  };
+
   if (appSetting.loading) {
     return <Loader />;
   }
@@ -57,6 +103,7 @@ const Details = ({ currentMovie }: Props) => {
         <title>{movie?.name} - Что бы посмотреть?</title>
       </Head>
       <Header />
+      <Toaster position="bottom-center" />
       <main className="px-4 lg:space-y-24 lg:px-16 pb-8 bg-[#141414]">
         <div className="flex justify-center">
           <div className="flex items-center flex-col gap-6 md:flex-row md:space-y-24 mt-20 md:mt-24 lg:gap-14">
@@ -141,8 +188,15 @@ const Details = ({ currentMovie }: Props) => {
                     Трейлер
                   </button>
                 )}
-                <button className="bg-[hsla(216,4%,55%,.3)] p-3 rounded hover:bg-[#5a5959] transition">
-                  <BookmarkIcon className="w-6 h-6" />
+                <button
+                  className="bg-[hsla(216,4%,55%,.3)] p-3 rounded hover:bg-[#5a5959] transition"
+                  onClick={() => handleLike()}
+                >
+                  {isLiked ? (
+                    <CheckBadgeIcon className="w-6 h-6" />
+                  ) : (
+                    <BookmarkIcon className="w-6 h-6" />
+                  )}
                 </button>
               </div>
             </div>
@@ -162,6 +216,8 @@ const Details = ({ currentMovie }: Props) => {
               (trailer) => trailer.site === 'youtube'
             )[0].url
           }
+          id={movie.id}
+          name={movie.name}
         />
       )}
       {showPersonModal && <ActorModal id={currentPersonId} />}

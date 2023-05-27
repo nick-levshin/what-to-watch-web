@@ -40,12 +40,11 @@ const Header = () => {
           : 'bg-gradient-to-t from-[#010511]/0 to-[#141414]'
       }`}
     >
-      <div className="flex items-center space-x-2 md:space-x-10">
+      <div className="flex items-center md:space-x-10">
         <Image
           src={logo}
-          width={200}
           alt="logo"
-          className="object-contain cursor-pointer"
+          className="object-contain cursor-pointer w-[160px] md:w-[200px]"
           priority
           onClick={() => handleLogo()}
         />
@@ -70,11 +69,14 @@ const Header = () => {
             Популярное
           </Link>
         </li>
-        <li className="headerLink">Избранное</li>
+        <li className="headerLink">
+          <Link href="/#liked" scroll={false}>
+            Избранное
+          </Link>
+        </li>
       </ul>
       <div className="flex items-center space-x-4 text-sm font-light">
         <MagnifyingGlassIcon className="h-6 w-6" />
-        <BellIcon className="h-6 w-6" />
         <Link href="/account">
           <Image
             src={profile}
