@@ -26,13 +26,6 @@ export interface Movie {
   poster: {
     url: string;
   };
-  videos: {
-    trailers: [
-      {
-        url: string;
-      }
-    ];
-  };
   genres: [
     {
       name: string;

@@ -212,9 +212,9 @@ const Details = ({ currentMovie }: Props) => {
       {showModal && (
         <TrailerModal
           url={
-            movie.videos.trailers.filter(
+            movie.videos?.trailers.filter(
               (trailer) => trailer.site === 'youtube'
-            )[0].url
+            )[0].url!
           }
           id={movie.id}
           name={movie.name}
