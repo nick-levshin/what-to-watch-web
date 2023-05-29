@@ -76,7 +76,9 @@ const Header = () => {
         </li>
       </ul>
       <div className="flex items-center space-x-4 text-sm font-light">
-        <MagnifyingGlassIcon className="h-6 w-6" />
+        <Link href="/search">
+          <MagnifyingGlassIcon className="h-6 w-6" />
+        </Link>
         <Link href="/account">
           <Image
             src={profile}

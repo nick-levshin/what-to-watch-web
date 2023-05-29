@@ -2,6 +2,14 @@ export interface App {
   loading: boolean;
 }
 
+export interface Query {
+  sort?: string;
+  type?: string;
+  genre?: string;
+  year?: number[];
+  rating?: number[];
+}
+
 export interface Movie {
   id: number;
   name: string;
@@ -68,6 +76,9 @@ export interface Person {
 
 export interface DocsMovies {
   docs: [Movie];
+  total: number;
+  page: number;
+  pages: number;
 }
 
 export interface User {

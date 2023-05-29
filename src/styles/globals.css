@@ -189,3 +189,90 @@ html {
 .list ul li:hover:before {
   transform: scaleX(1);
 }
+
+/* Pagination */
+.MuiPaginationItem-root {
+  color: #fff;
+  font-size: 16px;
+}
+
+.MuiPagination-ul li {
+  width: 7vw;
+}
+
+@media (min-width: 768px) {
+  .MuiPaginationItem-root {
+    color: #fff;
+    font-size: 18px;
+  }
+
+  .MuiPagination-ul li {
+    width: auto;
+  }
+}
+
+.css-1to7aaw-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected {
+  background-color: #dc2626;
+}
+
+.css-1to7aaw-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected:hover {
+  background-color: #ee3f3f;
+}
+
+/* MovieLoader */
+.movieLoader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  position: relative;
+  animation: rotate 1s linear infinite;
+}
+.movieLoader::before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  inset: 0px;
+  border-radius: 50%;
+  border: 5px solid #fff;
+  animation: prixClipFix 2s linear infinite;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes prixClipFix {
+  0% {
+    clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
+  }
+  25% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0);
+  }
+  50% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%);
+  }
+  75% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%);
+  }
+  100% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0);
+  }
+}
+
+@media (min-width: 768px) {
+  .wrapper:hover div {
+    opacity: 100%;
+  }
+}
+
+/* Select */
+.MuiOutlinedInput-notchedOutline {
+  border-width: 2px !important;
+  border-color: #dc2626 !important;
+}
+
+.MuiSlider-markLabel {
+  color: white;
+}
