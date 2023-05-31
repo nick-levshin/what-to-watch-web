@@ -6,6 +6,8 @@ import logo from '@/assets/logo.svg';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import useAuth from '@/hooks/useAuth';
 import Loader from '@/components/Loader';
+import { useRecoilValue } from 'recoil';
+import { appState } from '@/atoms/detailsAtom';
 
 interface Inputs {
   nickname: string;
@@ -14,7 +16,7 @@ interface Inputs {
 }
 
 const Login = () => {
-  const { loading } = useAuth();
+  const appSettings = useRecoilValue(appState);
   const [isSignUp, setIsSignUp] = useState(false);
   const { signIn, signUp } = useAuth();
   const {
@@ -34,7 +36,7 @@ const Login = () => {
     }
   };
 
-  if (loading) {
+  if (appSettings.loading) {
     return <Loader />;
   }
 

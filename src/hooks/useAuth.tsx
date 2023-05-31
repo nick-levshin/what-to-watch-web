@@ -1,16 +1,15 @@
-import { useState, useMemo, useContext, createContext, useEffect } from 'react';
+import { useMemo, useContext, createContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '@/utils/supabaseClient';
 import { User } from '../../typings';
 import bcrypt from 'bcryptjs-react';
 import { useRecoilState } from 'recoil';
-import { userState } from '@/atoms/detailsAtom';
+import { appState, userState } from '@/atoms/detailsAtom';
 
 interface IAuth {
   user: User | null;
   signUp: (nickname: string, email: string, password: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
-  loading: boolean;
   logout: () => void;
 }
 
@@ -22,12 +21,11 @@ const AuthContext = createContext<IAuth>({
   user: null,
   signUp: async () => {},
   signIn: async () => {},
-  loading: false,
   logout: () => {},
 });
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [loading, setLoading] = useState(false);
+  const [appSettings, setAppSettings] = useRecoilState(appState);
   const [user, setUser] = useRecoilState(userState);
   const router = useRouter();
 
@@ -43,6 +41,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             .single();
           if (data) {
             setUser(data);
+            setAppSettings({ loading: false });
           } else {
             throw new Error('Incorrect email or password');
           }
@@ -56,7 +55,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   const signUp = async (nickname: string, email: string, password: string) => {
-    setLoading(true);
+    setAppSettings({ loading: true });
     try {
       const hashedPassword = bcrypt.hashSync(password, 10);
       const { data } = await supabase
@@ -67,17 +66,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       if (data) {
         setUser(data);
         localStorage.setItem('user', email);
-        router.push('/').then(() => setLoading(false));
+        router.push('/').then(() => setAppSettings({ loading: false }));
       }
     } catch (e) {
       console.log('Sign Up error:', e);
-      setLoading(false);
+      setAppSettings({ loading: false });
     }
   };
 
   const signIn = async (email: string, password: string) => {
     try {
-      setLoading(true);
+      setAppSettings({ loading: true });
       const { data } = await supabase
         .from('users')
         .select('id, username, email, password, created_at, liked_movies')
@@ -86,14 +85,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       if (data && bcrypt.compareSync(password, data.password)) {
         setUser(data);
         localStorage.setItem('user', email);
-        router.push('/').then(() => setLoading(false));
+        router.push('/').then(() => setAppSettings({ loading: false }));
       } else {
         alert('Некорректный email или пароль');
         throw new Error('Incorrect email or password');
       }
     } catch (e) {
       console.log('Sign In error:', e);
-      setLoading(false);
+      setAppSettings({ loading: false });
     }
   };
 
@@ -104,10 +103,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     router.push('/login');
   };
 
-  const memoedValue = useMemo(
-    () => ({ user, signUp, signIn, loading, logout }),
-    [user, loading]
-  );
+  const memoedValue = useMemo(() => ({ user, signUp, signIn, logout }), [user]);
 
   return (
     <AuthContext.Provider value={memoedValue}>{children}</AuthContext.Provider>

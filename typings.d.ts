@@ -45,6 +45,11 @@ export interface Movie {
       enProfession: string;
     }
   ];
+  facts?: [
+    {
+      value: string;
+    }
+  ];
   videos?: {
     trailers: [
       {

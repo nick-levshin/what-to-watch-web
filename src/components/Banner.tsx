@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { Movie } from '../../typings';
 import { InformationCircleIcon, PlayIcon } from '@heroicons/react/24/solid';
 import { useRouter } from 'next/router';
-import { appState } from '@/atoms/detailsAtom';
+import { appState, movieModalState } from '@/atoms/detailsAtom';
 import { useRecoilState } from 'recoil';
 
 interface Props {
@@ -12,6 +12,7 @@ interface Props {
 const Banner = ({ randomMovie }: Props) => {
   const router = useRouter();
   const [appSetting, setAppSettings] = useRecoilState(appState);
+  const [showMovieModal, setShowMovieModal] = useRecoilState(movieModalState);
 
   const handleMovieClick = (id: number) => {
     setAppSettings({ loading: true });
@@ -36,10 +37,17 @@ const Banner = ({ randomMovie }: Props) => {
       </p>
 
       <div className="flex space-x-3">
-        <button className="bannerButton bg-white text-black">
-          <PlayIcon className="w-4 h-4 text-black md:h-7 md:w-7" />
-          Смотреть
-        </button>
+        {randomMovie.videos?.trailers.filter(
+          (trailer) => trailer.site === 'youtube'
+        ).length && (
+          <button
+            className="bannerButton bg-white text-black"
+            onClick={() => setShowMovieModal(true)}
+          >
+            <PlayIcon className="w-4 h-4 text-black md:h-7 md:w-7" />
+            Смотреть
+          </button>
+        )}
         <button
           className="bannerButton bg-[gray]/70"
           onClick={() => handleMovieClick(randomMovie.id)}

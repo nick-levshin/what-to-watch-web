@@ -7,9 +7,15 @@ import { DocsMovies, Movie, User } from '../../typings';
 import Row from '@/components/Row';
 import { useRouter } from 'next/router';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { appState, likedMoviesState, userState } from '@/atoms/detailsAtom';
+import {
+  appState,
+  likedMoviesState,
+  movieModalState,
+  userState,
+} from '@/atoms/detailsAtom';
 import Loader from '@/components/Loader';
 import { useEffect } from 'react';
+import MovieModal from '@/components/MovieModal';
 
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
@@ -41,6 +47,7 @@ const Home = ({
   const appSetting = useRecoilValue(appState);
   const user = useRecoilValue(userState);
   const [likedMovies, setLikedMovies] = useRecoilState(likedMoviesState);
+  const showMovieModal = useRecoilValue(movieModalState);
 
   useEffect(() => {
     const fetchLikedMovies = async () => {
@@ -101,6 +108,15 @@ const Home = ({
           )}
         </section>
       </main>
+      {showMovieModal && (
+        <MovieModal
+          url={
+            randomMovie.videos?.trailers.filter(
+              (trailer) => trailer.site === 'youtube'
+            )[0].url!
+          }
+        />
+      )}
     </div>
   );
 };

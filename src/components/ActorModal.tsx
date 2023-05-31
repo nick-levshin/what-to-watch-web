@@ -9,6 +9,7 @@ import { Person } from '../../typings';
 import Image from 'next/image';
 import nophoto from '@/assets/nophoto.jpg';
 import { useRouter } from 'next/router';
+import parse from 'html-react-parser';
 
 interface Props {
   id: number | null;
@@ -139,7 +140,7 @@ const ActorModal = ({ id }: Props) => {
                 <ul className="text-base pl-3 font-normal mt-1 marker:text-[#dc2626] marker:text-lg list-disc md:text-lg md:marker:text-2xl">
                   {currentPerson.facts.slice(0, 5).map((fact, i) => (
                     <li className="py-1 ml-4" key={i}>
-                      {fact.value}
+                      {parse(fact.value)}
                     </li>
                   ))}
                 </ul>

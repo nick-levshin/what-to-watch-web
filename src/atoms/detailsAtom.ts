@@ -3,7 +3,7 @@ import { App, DocsMovies, Movie, Query, User } from '../../typings';
 
 export const appState = atom<App>({
   key: 'appState',
-  default: { loading: false },
+  default: { loading: true },
 });
 
 export const userState = atom<User | null>({
@@ -23,6 +23,11 @@ export const modalState = atom({
 
 export const personModalState = atom({
   key: 'personModalState',
+  default: false,
+});
+
+export const movieModalState = atom({
+  key: 'movieModalState',
   default: false,
 });
 

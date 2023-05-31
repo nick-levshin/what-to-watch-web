@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   appState,
   modalState,
+  movieModalState,
   personIdState,
   personModalState,
   userState,
@@ -20,6 +21,8 @@ import TrailerModal from '@/components/TrailerModal';
 import ActorModal from '@/components/ActorModal';
 import { supabase } from '@/utils/supabaseClient';
 import { Toaster, toast } from 'react-hot-toast';
+import parse from 'html-react-parser';
+import MovieModal from '@/components/MovieModal';
 
 interface Props {
   currentMovie: DocsMovies;
@@ -30,6 +33,7 @@ const Details = ({ currentMovie }: Props) => {
   const [showModal, setShowModal] = useRecoilState(modalState);
   const [showPersonModal, setShowPersonModal] =
     useRecoilState(personModalState);
+  const [showMovieModal, setShowMovieModal] = useRecoilState(movieModalState);
   const appSetting = useRecoilValue(appState);
   const [currentPersonId, setCurrentPersonId] = useRecoilState(personIdState);
   const movie = currentMovie.docs[0];
@@ -106,7 +110,7 @@ const Details = ({ currentMovie }: Props) => {
       <Toaster position="bottom-center" />
       <main className="px-4 lg:space-y-24 lg:px-16 pb-8 bg-[#141414]">
         <div className="flex justify-center">
-          <div className="flex items-center flex-col gap-6 md:flex-row md:space-y-24 mt-20 md:mt-24 lg:gap-14">
+          <div className="flex items-center flex-col gap-6 md:flex-row md:space-y-24 mt-20 md:mt-24 lg:gap-24">
             <div className="relative w-[300px] h-[400px] md:min-w-[400px] md:h-[533px]">
               <Image
                 src={movie?.poster?.url || noposter}
@@ -115,7 +119,7 @@ const Details = ({ currentMovie }: Props) => {
                 sizes="(min-width: 768px) 300px, 400px"
               />
             </div>
-            <div className="max-w-[600px] !mt-0">
+            <div className="max-w-[600px] lg:max-w-[800px] !mt-0">
               <div className="w-full lg:text-lg">
                 <h1 className="text-3xl font-semibold md:text-4xl lg:text-5xl">
                   {movie?.name}
@@ -177,16 +181,21 @@ const Details = ({ currentMovie }: Props) => {
                 </p>
               </div>
               <div className="mt-6 flex gap-4 items-center font-semibold lg:text-lg">
-                <button className="bg-[#dc2626] p-3 rounded hover:bg-[#ee3f3f] transition">
-                  Смотреть фильм
-                </button>
                 {isTrailer && (
-                  <button
-                    className="bg-[hsla(216,4%,55%,.3)] p-3 rounded hover:bg-[#5a5959] transition"
-                    onClick={() => setShowModal(true)}
-                  >
-                    Трейлер
-                  </button>
+                  <>
+                    <button
+                      className="bg-[#dc2626] p-3 rounded hover:bg-[#ee3f3f] transition"
+                      onClick={() => setShowMovieModal(true)}
+                    >
+                      Смотреть фильм
+                    </button>
+                    <button
+                      className="bg-[hsla(216,4%,55%,.3)] p-3 rounded hover:bg-[#5a5959] transition"
+                      onClick={() => setShowModal(true)}
+                    >
+                      Трейлер
+                    </button>
+                  </>
                 )}
                 <button
                   className="bg-[hsla(216,4%,55%,.3)] p-3 rounded hover:bg-[#5a5959] transition"
@@ -208,6 +217,20 @@ const Details = ({ currentMovie }: Props) => {
           </h3>
           <ActorsRow persons={rowActorsArray} />
         </div>
+        {movie?.facts?.length && (
+          <div className="mt-10">
+            <h3 className="text-2xl font-semibold mb-6 lg:text-3xl">
+              Знали ли вы, что...
+            </h3>
+            <hr className="block h-[1px] border-0 border-t-2 border-gray-500" />
+            {movie?.facts?.slice(0, 7).map((fact, index) => (
+              <React.Fragment key={index}>
+                <p className="p-3 lg:text-lg">{parse(fact.value)}</p>
+                <hr className="block h-[1px] border-0 border-t-2 border-gray-500" />
+              </React.Fragment>
+            ))}
+          </div>
+        )}
       </main>
       {showModal && (
         <TrailerModal
@@ -218,6 +241,15 @@ const Details = ({ currentMovie }: Props) => {
           }
           id={movie.id}
           name={movie.name}
+        />
+      )}
+      {showMovieModal && (
+        <MovieModal
+          url={
+            movie.videos?.trailers.filter(
+              (trailer) => trailer.site === 'youtube'
+            )[0].url!
+          }
         />
       )}
       {showPersonModal && <ActorModal id={currentPersonId} />}
@@ -232,7 +264,7 @@ export const getServerSideProps = async (context: {
 }) => {
   const [movie] = await Promise.all([
     axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL}movie?selectFields=id%20name%20poster%20year%20description%20rating%20movieLength%20genres%20countries%20persons%20videos.trailers&page=1&id=${context.params.id}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}movie?selectFields=id%20name%20poster%20year%20description%20rating%20movieLength%20genres%20countries%20persons%20videos.trailers%20facts&page=1&id=${context.params.id}`,
       {
         headers: {
           'Content-type': 'application/json',

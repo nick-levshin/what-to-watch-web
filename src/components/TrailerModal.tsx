@@ -70,7 +70,7 @@ const TrailerModal = ({ url, id, name }: Props) => {
     <MuiModal
       open={showModal}
       onClose={() => setShowModal(false)}
-      className="fixed !top-10 left-0 right-0 z-50 mx-auto w-full max-w-5xl] overflow-hidden overflow-y-scroll rounded-md scrollbar-hide"
+      className="fixed !top-10 left-0 right-0 z-50 mx-auto w-full max-w-5xl overflow-hidden overflow-y-scroll rounded-md scrollbar-hide"
     >
       <>
         <Toaster position="bottom-center" />
@@ -115,7 +115,10 @@ const TrailerModal = ({ url, id, name }: Props) => {
                 )}
               </button>
             </div>
-            <button className="modalButton" onClick={() => setMuted(!muted)}>
+            <button
+              className="modalButton"
+              onClick={() => setMuted((prev) => !prev)}
+            >
               {muted ? (
                 <SpeakerXMarkIcon className="h-6 w-6" />
               ) : (
