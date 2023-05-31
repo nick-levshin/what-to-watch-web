@@ -48,6 +48,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         } catch (e) {
           console.log('Fetch user error:', e);
         }
+      } else {
+        await router.push('/login');
+        setAppSettings({ loading: false });
       }
     };
 

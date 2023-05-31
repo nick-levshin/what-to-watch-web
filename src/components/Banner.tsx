@@ -37,7 +37,7 @@ const Banner = ({ randomMovie }: Props) => {
       </p>
 
       <div className="flex space-x-3">
-        {randomMovie.videos?.trailers.filter(
+        {!!randomMovie.videos?.trailers.filter(
           (trailer) => trailer.site === 'youtube'
         ).length && (
           <button
