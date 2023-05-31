@@ -59,7 +59,7 @@ const SideMenuList = () => {
   return (
     <Box
       role="presentation"
-      className=" h-full bg-black text-white w-[250px] md:w-[300px]"
+      className=" h-full bg-black text-white w-[255px] md:w-[300px]"
     >
       <h2 className="text-center mt-4 text-2xl font-bold md:text-3xl">
         Фильтры

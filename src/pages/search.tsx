@@ -85,7 +85,7 @@ const Search = () => {
         <title>Поиск - Что бы посмотреть?</title>
       </Head>
       <Header />
-      <main className="pt-20 px-5 pb-12 transition-all md:px-10">
+      <main className="pt-20 px-5 pb-12 transition-all md:px-10 overflow-x-hidden">
         <div className="flex gap-4 items-center">
           <div className="cursor-pointer">
             <SideMenu />

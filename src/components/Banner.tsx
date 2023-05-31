@@ -27,6 +27,7 @@ const Banner = ({ randomMovie }: Props) => {
           alt="random movie"
           fill
           className="object-cover"
+          priority
         />
       </div>
       <h1 className=" text-shadow-md text-2xl lg:text-7xl md:text-4xl font-bold">
