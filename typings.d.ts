@@ -72,6 +72,16 @@ export interface Person {
   facts: [{ value: string }];
 }
 
+export interface Comment {
+  id?: number;
+  created_at?: string;
+  text?: string;
+  users?: {
+    username?: string;
+  };
+  movieId?: number;
+}
+
 export interface DocsMovies {
   docs: [Movie];
   total: number;

@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setAppSettings({ loading: true });
     try {
       const hashedPassword = bcrypt.hashSync(password, 10);
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('users')
         .insert({ username: nickname, email, password: hashedPassword })
         .select('id, username, email, password, created_at, liked_movies')
@@ -70,9 +70,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setUser(data);
         localStorage.setItem('user', email);
         router.push('/').then(() => setAppSettings({ loading: false }));
+      } else {
+        alert('Пользователь с такими данными уже существует');
+        throw new Error('Such a user already exists');
       }
     } catch (e) {
       console.log('Sign Up error:', e);
+    } finally {
       setAppSettings({ loading: false });
     }
   };
