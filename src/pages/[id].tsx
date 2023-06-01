@@ -14,7 +14,7 @@ import Image from 'next/image';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import noposter from '@/assets/noposter.jpg';
 import axios from 'axios';
-import { DocsMovies, Comment } from '../../typings';
+import { DocsMovies } from '../../typings';
 import { BookmarkIcon, CheckBadgeIcon } from '@heroicons/react/24/outline';
 import ActorsRow from '@/components/ActorsRow';
 import TrailerModal from '@/components/TrailerModal';
@@ -28,10 +28,9 @@ import { InformationCircleIcon, UsersIcon } from '@heroicons/react/24/solid';
 
 interface Props {
   currentMovie: DocsMovies;
-  comments: Comment[];
 }
 
-const Details = ({ currentMovie, comments }: Props) => {
+const Details = ({ currentMovie }: Props) => {
   const [user, setUser] = useRecoilState(userState);
   const [showModal, setShowModal] = useRecoilState(modalState);
   const [showPersonModal, setShowPersonModal] =
@@ -43,7 +42,6 @@ const Details = ({ currentMovie, comments }: Props) => {
   const [isLiked, setIsLiked] = useState(
     user?.liked_movies?.includes(movie.id)
   );
-  const [currentComments, setCurrentComments] = useState(comments);
 
   const isTrailer =
     movie?.videos &&
@@ -241,11 +239,7 @@ const Details = ({ currentMovie, comments }: Props) => {
             ))}
           </div>
         )}
-        <Comments
-          comments={currentComments}
-          setComments={setCurrentComments}
-          movieId={movie?.id}
-        />
+        <Comments movieId={movie?.id} />
       </main>
       {showModal && (
         <TrailerModal
@@ -277,7 +271,7 @@ export default Details;
 export const getServerSideProps = async (context: {
   params: { id: number };
 }) => {
-  const [movie, comments] = await Promise.all([
+  const [movie] = await Promise.all([
     axios.get(
       `${process.env.NEXT_PUBLIC_BASE_URL}movie?selectFields=id%20name%20poster%20year%20description%20rating%20movieLength%20genres%20countries%20persons%20videos.trailers%20facts&page=1&id=${context.params.id}`,
       {
@@ -287,17 +281,11 @@ export const getServerSideProps = async (context: {
         },
       }
     ),
-    supabase
-      .from('comments')
-      .select('created_at, text, userId, movieId, users(username)')
-      .eq('movieId', context.params.id)
-      .order('created_at', { ascending: false }),
   ]);
 
   return {
     props: {
       currentMovie: movie.data,
-      comments: comments.data,
     },
   };
 };

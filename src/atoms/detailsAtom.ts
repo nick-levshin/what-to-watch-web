@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { App, DocsMovies, Movie, Query, User } from '../../typings';
+import { App, DocsMovies, Movie, Query, User, Comment } from '../../typings';
 
 export const appState = atom<App>({
   key: 'appState',
@@ -50,4 +50,9 @@ export const queryState = atom<Query | null>({
     year: [1950, 2030],
     rating: [1, 10],
   },
+});
+
+export const commentsState = atom<Comment[] | null>({
+  key: 'commentsState',
+  default: null,
 });

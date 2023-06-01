@@ -1,18 +1,18 @@
 import { supabase } from '@/utils/supabaseClient';
-import { Comment } from '../../typings';
 import { ChatBubbleBottomCenterTextIcon } from '@heroicons/react/24/solid';
-import { useRecoilValue } from 'recoil';
-import { userState } from '@/atoms/detailsAtom';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { commentsState, userState } from '@/atoms/detailsAtom';
 import { Toaster, toast } from 'react-hot-toast';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { Comment } from '../../typings';
+import { useEffect } from 'react';
 
 interface Props {
-  comments: Comment[];
-  setComments: Function;
   movieId: number;
 }
 
-const Comments = ({ comments, setComments, movieId }: Props) => {
+const Comments = ({ movieId }: Props) => {
+  const [comments, setComments] = useRecoilState(commentsState);
   const user = useRecoilValue(userState);
   const {
     register,
@@ -21,24 +21,32 @@ const Comments = ({ comments, setComments, movieId }: Props) => {
     reset,
   } = useForm<{ text: string }>();
 
+  const fetchComments = async () => {
+    const { data } = await supabase
+      .from('comments')
+      .select('created_at, text, userId, movieId, users(username)')
+      .eq('movieId', movieId)
+      .order('created_at', { ascending: false });
+    setComments(data as Comment[]);
+  };
+
   const handleComment: SubmitHandler<{ text: string }> = async ({ text }) => {
     const { error } = await supabase
       .from('comments')
       .insert({ text, userId: user?.id, movieId });
 
-    if (!error) {
-      const { data } = await supabase
-        .from('comments')
-        .select('created_at, text, userId, movieId, users(username)')
-        .eq('movieId', movieId)
-        .order('created_at', { ascending: false });
-      setComments(data);
+    if (error === null) {
+      fetchComments();
       toast.success('Комментарий оставлен', { duration: 3000 });
     } else {
       toast.error('Ошибка, попробуйте позже', { duration: 3000 });
     }
     reset();
   };
+
+  useEffect(() => {
+    fetchComments();
+  }, []);
 
   return (
     <div>
